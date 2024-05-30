@@ -145,14 +145,16 @@
         function updateResults() {
             // Display the cumulative results for pulled items
             let outputDiv = document.getElementById('output');
-            outputDiv.innerHTML = '';
             let pulledItems = Object.keys(results).filter(item => results[item] > 0);
+
+            // Append to the end of the output log
             pulledItems.forEach(item => {
-                // Remove "Tier " from the output
-                let itemName = item.replace('Tier ', '');
-                let p = document.createElement('p');
-                p.textContent = `${itemName}: ${results[item]}`;
-                outputDiv.appendChild(p);
+                if (results[item] > 0) {
+                    let itemName = item.replace('Tier ', '');
+                    let p = document.createElement('p');
+                    p.textContent = `${itemName}: ${results[item]}`;
+                    outputDiv.appendChild(p);
+                }
             });
 
             // Display the total numbers of each tier that was pulled
