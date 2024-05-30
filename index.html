@@ -18,13 +18,16 @@
             background-color: #f0f0f0; /* Default light mode background color */
             color: #333; /* Default light mode text color */
             transition: background-color 0.3s, color 0.3s;
+            position: relative;
         }
         body.dark-mode {
             background-color: #333; /* Dark mode background color */
             color: #f0f0f0; /* Dark mode text color */
         }
         .switch {
-            position: relative;
+            position: absolute;
+            top: 20px;
+            right: 20px;
             display: inline-block;
             width: 40px;
             height: 24px;
@@ -101,10 +104,13 @@
             flex-grow: 1;
             overflow-y: auto;
             width: 100%;
+            max-height: 400px; /* Added max-height for scrolling */
+            scrollbar-width: thin; /* Provide a thin scrollbar in Firefox */
         }
         #output {
             margin-top: 10px;
             text-align: left;
+            padding-right: 15px; /* Add some padding to keep scrollbar visible */
         }
         #totals {
             margin-top: 10px;
@@ -127,6 +133,11 @@
 <body>
     <h1>Gachapon Simulator</h1>
 
+    <label class="switch">
+        <input type="checkbox" onclick="toggleDarkMode()">
+        <span class="slider round"></span>
+    </label>
+
     <div id="container">
         <div>
             <button class="button" onclick="drawGachapon(1)">1 Draw</button>
@@ -144,11 +155,6 @@
             <div class="counter" id="pityCounterHits">Pity Counter Hits: 0</div>
             <div class="counter" id="untilPity">Until Pity: 10</div>
         </div>
-
-        <label class="switch">
-            <input type="checkbox" onclick="toggleDarkMode()">
-            <span class="slider round"></span>
-        </label>
     </div>
 
     <script>
@@ -224,6 +230,9 @@
 
             // Update the UI with results
             updateResults();
+
+            // Scroll to the bottom of the results container
+            scrollToBottom();
         }
 
         function pullItem(tierName) {
