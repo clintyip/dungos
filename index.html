@@ -61,7 +61,7 @@
     </div>
 
     <div id="untilPity">
-        <p>Until Pity: Infinity</p>
+        <p>Until Pity: 10</p>
     </div>
 
     <script>
@@ -87,7 +87,7 @@
 
         let pityCounter = 0;
         let pityCounterHits = 0;
-        let untilPity = Infinity;
+        let untilPity = 10;
         let results = {};
 
         // Initialize the results object for each item
@@ -109,7 +109,7 @@
                 if (pityCounter >= 9) {
                     pityCounter = 0;
                     pityCounterHits++;
-                    untilPity = Infinity; // Reset untilPity
+                    untilPity = 10; // Reset untilPity
                     if (Math.random() < 0.8) {
                         pullItem('Tier 3');
                     } else {
@@ -125,7 +125,7 @@
                         pullItem(tier.name);
                         if (tier.name === 'Tier 3' || tier.name === 'Tier 4') {
                             pityCounter = 0;  // Reset pity counter if Tier 3 or Tier 4 is drawn
-                            untilPity = Infinity; // Reset untilPity
+                            untilPity = 10; // Reset untilPity
                         }
                         break;
                     }
@@ -181,7 +181,7 @@
             // Reset all counters and results
             pityCounter = 0;
             pityCounterHits = 0;
-            untilPity = Infinity;
+            untilPity = 10;
             results = {};
 
             // Initialize the results object for each item
