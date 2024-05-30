@@ -31,6 +31,9 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        #pityCounterHits {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -45,10 +48,13 @@
 
     <div id="results">
         <h2>Results</h2>
-        <p id="pityCounterHits">Pity Counter Hits: 0</p>
         <div id="output"></div>
         <h3>Total Tiers Pulled</h3>
         <ul id="totals"></ul>
+    </div>
+
+    <div id="pityCounterHits">
+        <p>Pity Counter Hits: 0</p>
     </div>
 
     <script>
@@ -152,9 +158,6 @@
                 li.textContent = `${tier.name}: ${total}`;
                 totalsList.appendChild(li);
             });
-
-            // Display the pity counter hits
-            document.getElementById('pityCounterHits').textContent = `Pity Counter Hits: ${pityCounterHits}`;
         }
 
         function resetSimulation() {
@@ -172,6 +175,9 @@
 
             // Update the UI with reset results
             updateResults();
+
+            // Update the UI for Pity Counter Hits
+            document.getElementById('pityCounterHits').innerHTML = `<p>Pity Counter Hits: ${pityCounterHits}</p>`;
         }
     </script>
 </body>
