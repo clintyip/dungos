@@ -40,6 +40,7 @@
         <button class="button" onclick="drawGachapon(1)">1 Draw</button>
         <button class="button" onclick="drawGachapon(5)">5 Draws</button>
         <button class="button" onclick="drawGachapon(10)">10 Draws</button>
+        <button class="button" onclick="resetSimulation()">Reset</button>
     </div>
 
     <div id="results">
@@ -154,6 +155,23 @@
 
             // Display the pity counter hits
             document.getElementById('pityCounterHits').textContent = `Pity Counter Hits: ${pityCounterHits}`;
+        }
+
+        function resetSimulation() {
+            // Reset all counters and results
+            pityCounter = 0;
+            pityCounterHits = 0;
+            results = {};
+
+            // Initialize the results object for each item
+            items.forEach(item => {
+                tiers.forEach(tier => {
+                    results[`${item} ${tier.name}`] = 0;
+                });
+            });
+
+            // Update the UI with reset results
+            updateResults();
         }
     </script>
 </body>
