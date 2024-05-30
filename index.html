@@ -34,6 +34,9 @@
         #pityCounterHits {
             margin-top: 20px;
         }
+        #untilPity {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -55,6 +58,10 @@
 
     <div id="pityCounterHits">
         <p>Pity Counter Hits: 0</p>
+    </div>
+
+    <div id="untilPity">
+        <p>Until Pity: Infinity</p>
     </div>
 
     <script>
@@ -80,6 +87,7 @@
 
         let pityCounter = 0;
         let pityCounterHits = 0;
+        let untilPity = Infinity;
         let results = {};
 
         // Initialize the results object for each item
@@ -95,11 +103,13 @@
                 let cumulativeProbability = 0;
 
                 pityCounter++;
+                untilPity--;
 
                 // Check for pity
                 if (pityCounter >= 9) {
                     pityCounter = 0;
                     pityCounterHits++;
+                    untilPity = Infinity; // Reset untilPity
                     if (Math.random() < 0.8) {
                         pullItem('Tier 3');
                     } else {
@@ -115,6 +125,7 @@
                         pullItem(tier.name);
                         if (tier.name === 'Tier 3' || tier.name === 'Tier 4') {
                             pityCounter = 0;  // Reset pity counter if Tier 3 or Tier 4 is drawn
+                            untilPity = Infinity; // Reset untilPity
                         }
                         break;
                     }
@@ -161,12 +172,16 @@
 
             // Display the pity counter hits
             document.getElementById('pityCounterHits').innerHTML = `<p>Pity Counter Hits: ${pityCounterHits}</p>`;
+
+            // Display the until pity
+            document.getElementById('untilPity').innerHTML = `<p>Until Pity: ${untilPity}</p>`;
         }
 
         function resetSimulation() {
             // Reset all counters and results
             pityCounter = 0;
             pityCounterHits = 0;
+            untilPity = Infinity;
             results = {};
 
             // Initialize the results object for each item
