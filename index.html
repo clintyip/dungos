@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gachapon Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        #results {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 600px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gachapon Simulator</h1>
+
+    <div>
+        <button class="button" onclick="drawGachapon(1)">1 Draw</button>
+        <button class="button" onclick="drawGachapon(5)">5 Draws</button>
+        <button class="button" onclick="drawGachapon(10)">10 Draws</button>
+    </div>
+
+    <div id="results">
+        <h2>Results</h2>
+        <p id="pityCounterHits">Pity Counter Hits: 0</p>
+        <div id="output"></div>
+        <h3>Total Tiers Pulled</h3>
+        <ul id="totals"></ul>
+    </div>
+
+    <script>
+        // Define the items
+        const items = [
+            'Berserker\'s armor', 'BF Cannon', 'Big Club', 'Chumby Chicken', 'Cleansing Flames',
+            'Curse of Exhaustion', 'Dark Ritual', 'Draining Dagger', 'Fiery Thorns', 'Fire Sword',
+            'Halberd', 'Healing Pendant', 'Love Letter', 'Magic Parasol', 'Martyr Armor',
+            'Mocking Armor', 'Pet Imp', 'Poison Dagger', 'Riot Shield', 'Rock Companion',
+            'Sacrificial Tome', 'Seeking Missiles', 'Special Delivery', 'Survival Kit',
+            'Whirlwind Axe', 'Witch\'s Armor', 'Boosting Bugle', 'Challenger Arrow',
+            'Energetic Ally', 'Explosion Powder', 'Festive Feast', 'Freezing Popsicle',
+            'Knight\'s Lance', 'Plague Bringer', 'POGable Forge', 'Punching Bag', 'The BOX'
+        ];
+
+        // Define the tiers with their base probabilities
+        const tiers = [
+            { name: 'Tier 1', probability: 0.4 },
+            { name: 'Tier 2', probability: 0.5 },
+            { name: 'Tier 3', probability: 0.08 },
+            { name: 'Tier 4', probability: 0.02 }
+        ];
+
+        let pityCounter = 0;
+        let results = {};
+
+        // Initialize the results object for each item
+        items.forEach(item => {
+            tiers.forEach(tier => {
+                results[`${item} ${tier.name}`] = 0;
+            });
+        });
+
+        function drawGachapon(numDraws) {
+            for (let i = 0; i < numDraws; i++) {
+                let random = Math.random();
+                let cumulativeProbability = 0;
+
+                pityCounter++;
+
+                // Check for pity
+                if (pityCounter >= 9) {
+                    pityCounter = 0;
+                    pityCounterHits++;
+                    if (Math.random() < 0.8) {
+                        pullItem('Tier 3');
+                    } else {
+                        pullItem('Tier 4');
+                    }
+                    continue;
+                }
+
+                // Normal draw
+                for (let tier of tiers) {
+                    cumulativeProbability += tier.probability;
+                    if (random < cumulativeProbability) {
+                        pullItem(tier.name);
+                        if (tier.name === 'Tier 3' || tier.name === 'Tier 4') {
+                            pityCounter = 0;  // Reset pity counter if Tier 3 or Tier 4 is drawn
+                        }
+                        break;
+                    }
+                }
+            }
+
+            // Update the UI with results
+            updateResults();
+        }
+
+        function pullItem(tierName) {
+            // Randomly select one item from the list
+            let selectedItem = items[Math.floor(Math.random() * items.length)];
+            results[`${selectedItem} ${tierName}`]++;
+        }
+
+        function updateResults() {
+            // Display the cumulative results for pulled items
+            let outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = '';
+            let pulledItems = Object.keys(results).filter(item => results[item] > 0);
+            pulledItems.forEach(item => {
+                // Remove "Tier " from the output
+                let itemName = item.replace('Tier ', '');
+                let p = document.createElement('p');
+                p.textContent = `${itemName}: ${results[item]}`;
+                outputDiv.appendChild(p);
+            });
+
+            // Display the total numbers of each tier that was pulled
+            let totalsList = document.getElementById('totals');
+            totalsList.innerHTML = '';
+            tiers.forEach(tier => {
+                let total = Object.keys(results).reduce((acc, item) => {
+                    if (item.includes(tier.name)) {
+                        acc += results[item];
+                    }
+                    return acc;
+                }, 0);
+                let li = document.createElement('li');
+                li.textContent = `${tier.name}: ${total}`;
+                totalsList.appendChild(li);
+            });
+
+            // Display the pity counter hits
+            document.getElementById('pityCounterHits').textContent = `Pity Counter Hits: ${pityCounterHits}`;
+        }
+    </script>
+</body>
+</html>
