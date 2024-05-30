@@ -158,6 +158,9 @@
                 li.textContent = `${tier.name}: ${total}`;
                 totalsList.appendChild(li);
             });
+
+            // Display the pity counter hits
+            document.getElementById('pityCounterHits').innerHTML = `<p>Pity Counter Hits: ${pityCounterHits}</p>`;
         }
 
         function resetSimulation() {
@@ -175,9 +178,6 @@
 
             // Update the UI with reset results
             updateResults();
-
-            // Update the UI for Pity Counter Hits
-            document.getElementById('pityCounterHits').innerHTML = `<p>Pity Counter Hits: ${pityCounterHits}</p>`;
         }
     </script>
 </body>
