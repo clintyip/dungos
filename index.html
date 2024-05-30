@@ -147,6 +147,9 @@
             let outputDiv = document.getElementById('output');
             let pulledItems = Object.keys(results).filter(item => results[item] > 0);
 
+            // Clear the output before appending new results
+            outputDiv.innerHTML = '';
+
             // Append to the end of the output log
             pulledItems.forEach(item => {
                 if (results[item] > 0) {
