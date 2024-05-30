@@ -8,6 +8,13 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
         }
         .button {
             display: inline-block;
@@ -23,54 +30,67 @@
         .button:hover {
             background-color: #0056b3;
         }
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+            height: 100%;
+        }
         #results {
             text-align: left;
-            margin: 20px auto;
-            max-width: 600px;
+            margin-top: 20px;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
+            flex-grow: 1;
+            overflow-y: auto;
+            width: 100%;
         }
         #output {
             margin-top: 10px;
             text-align: left;
-            flex-basis: 100%;
         }
         #totals {
             margin-top: 10px;
             list-style-type: none;
             padding: 0;
             text-align: left;
-            flex-basis: 100%;
         }
         #counters {
-            flex-basis: 100%;
-            text-align: right;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
             margin-top: 20px;
+        }
+        .counter {
+            flex-basis: 50%;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <h1>Gachapon Simulator</h1>
 
-    <div>
-        <button class="button" onclick="drawGachapon(1)">1 Draw</button>
-        <button class="button" onclick="drawGachapon(5)">5 Draws</button>
-        <button class="button" onclick="drawGachapon(10)">10 Draws</button>
-        <button class="button" onclick="resetSimulation()">Reset</button>
-    </div>
+    <div id="container">
+        <div>
+            <button class="button" onclick="drawGachapon(1)">1 Draw</button>
+            <button class="button" onclick="drawGachapon(5)">5 Draws</button>
+            <button class="button" onclick="drawGachapon(10)">10 Draws</button>
+            <button class="button" onclick="resetSimulation()">Reset</button>
+        </div>
 
-    <div id="results">
-        <div id="output"></div>
-        <ul id="totals"></ul>
-    </div>
+        <div id="results">
+            <div id="output"></div>
+            <ul id="totals"></ul>
+        </div>
 
-    <div id="counters">
-        <p id="pityCounterHits">Pity Counter Hits: 0</p>
-        <p id="untilPity">Until Pity: 10</p>
+        <div id="counters">
+            <div class="counter" id="pityCounterHits">Pity Counter Hits: 0</div>
+            <div class="counter" id="untilPity">Until Pity: 10</div>
+        </div>
     </div>
 
     <script>
