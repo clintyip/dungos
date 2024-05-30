@@ -15,6 +15,13 @@
             height: 100vh;
             margin: 0;
             padding: 0;
+            background-color: #f0f0f0; /* Default light mode background color */
+            color: #333; /* Default light mode text color */
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background-color: #333; /* Dark mode background color */
+            color: #f0f0f0; /* Dark mode text color */
         }
         .button {
             display: inline-block;
@@ -69,6 +76,21 @@
             flex-basis: 50%;
             text-align: center;
         }
+        .mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .mode-toggle:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -92,6 +114,8 @@
             <div class="counter" id="untilPity">Until Pity: 10</div>
         </div>
     </div>
+
+    <button class="mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
     <script>
         // Define the items
@@ -228,6 +252,10 @@
 
             // Update the UI with reset results
             updateResults();
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
         }
     </script>
 </body>
