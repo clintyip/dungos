@@ -269,6 +269,9 @@
 
             // Display the until pity
             document.getElementById('untilPity').textContent = `Until Pity: ${untilPity}`;
+
+            // Auto-scroll to the bottom of the output
+            outputDiv.scrollTop = outputDiv.scrollHeight;
         }
 
         function resetSimulation() {
