@@ -30,21 +30,25 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
         }
         #output {
             margin-top: 10px;
             text-align: left;
+            flex-basis: 100%;
         }
         #totals {
             margin-top: 10px;
             list-style-type: none;
             padding: 0;
             text-align: left;
+            flex-basis: 100%;
         }
-        #pityCounterHits {
-            margin-top: 20px;
-        }
-        #untilPity {
+        #counters {
+            flex-basis: 100%;
+            text-align: right;
             margin-top: 20px;
         }
     </style>
@@ -60,18 +64,13 @@
     </div>
 
     <div id="results">
-        <h2>Results</h2>
         <div id="output"></div>
-        <h3>Total Tiers Pulled</h3>
         <ul id="totals"></ul>
     </div>
 
-    <div id="pityCounterHits">
-        <p>Pity Counter Hits: 0</p>
-    </div>
-
-    <div id="untilPity">
-        <p>Until Pity: 10</p>
+    <div id="counters">
+        <p id="pityCounterHits">Pity Counter Hits: 0</p>
+        <p id="untilPity">Until Pity: 10</p>
     </div>
 
     <script>
@@ -168,7 +167,7 @@
             // Append to the end of the output log
             drawHistory.forEach(item => {
                 let p = document.createElement('p');
-                p.textContent = item;
+                p.textContent = item.replace('Tier ', '');
                 outputDiv.appendChild(p);
             });
 
@@ -186,10 +185,10 @@
             });
 
             // Display the pity counter hits
-            document.getElementById('pityCounterHits').innerHTML = `<p>Pity Counter Hits: ${pityCounterHits}</p>`;
+            document.getElementById('pityCounterHits').textContent = `Pity Counter Hits: ${pityCounterHits}`;
 
             // Display the until pity
-            document.getElementById('untilPity').innerHTML = `<p>Until Pity: ${untilPity}</p>`;
+            document.getElementById('untilPity').textContent = `Until Pity: ${untilPity}`;
         }
 
         function resetSimulation() {
