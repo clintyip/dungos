@@ -100,11 +100,14 @@
             border-radius: 4px;
             flex-grow: 1;
             overflow-y: auto;
+            max-height: 300px;
             width: 100%;
         }
         #output {
             margin-top: 10px;
             text-align: left;
+            max-height: 100%; /* Ensure it stretches to the container */
+            overflow-y: auto; /* Enable scrolling */
         }
         #totals {
             margin-top: 10px;
@@ -234,40 +237,44 @@
         }
 
         function updateResults() {
-            // Display the cumulative results for pulled items
-            let outputDiv = document.getElementById('output');
-            let totalsList = document.getElementById('totals');
+    // Display the cumulative results for pulled items
+    let outputDiv = document.getElementById('output');
+    let totalsList = document.getElementById('totals');
 
-            // Clear the output before appending new results
-            outputDiv.innerHTML = '';
-            totalsList.innerHTML = '';
+    // Clear the output before appending new results
+    outputDiv.innerHTML = '';
+    totalsList.innerHTML = '';
 
-            // Append to the end of the output log
-            drawHistory.forEach(item => {
-                let p = document.createElement('p');
-                p.textContent = item.replace('Tier ', '');
-                outputDiv.appendChild(p);
-            });
+    // Append to the end of the output log
+    drawHistory.forEach(item => {
+        let p = document.createElement('p');
+        p.textContent = item.replace('Tier ', '');
+        outputDiv.appendChild(p);
+    });
 
-            // Display the total numbers of each tier that was pulled
-            tiers.forEach(tier => {
-                let total = Object.keys(results).reduce((acc, item) => {
-                    if (item.includes(tier.name)) {
-                        acc += results[item];
-                    }
-                    return acc;
-                }, 0);
-                let li = document.createElement('li');
-                li.textContent = `${tier.name}: ${total}`;
-                totalsList.appendChild(li);
-            });
+    // Display the total numbers of each tier that was pulled
+    tiers.forEach(tier => {
+        let total = Object.keys(results).reduce((acc, item) => {
+            if (item.includes(tier.name)) {
+                acc += results[item];
+            }
+            return acc;
+        }, 0);
+        let li = document.createElement('li');
+        li.textContent = `${tier.name}: ${total}`;
+        totalsList.appendChild(li);
+    });
 
-            // Display the pity counter hits
-            document.getElementById('pityCounterHits').textContent = `Pity Counter Hits: ${pityCounterHits}`;
+    // Display the pity counter hits
+    document.getElementById('pityCounterHits').textContent = `Pity Counter Hits: ${pityCounterHits}`;
 
-            // Display the until pity
-            document.getElementById('untilPity').textContent = `Until Pity: ${untilPity}`;
-        }
+    // Display the until pity
+    document.getElementById('untilPity').textContent = `Until Pity: ${untilPity}`;
+
+    // Auto-scroll to the bottom of the output
+    outputDiv.scrollTop = outputDiv.scrollHeight;
+}
+
 
         function resetSimulation() {
             // Reset all counters and results
