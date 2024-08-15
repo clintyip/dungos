@@ -122,6 +122,19 @@
             flex-basis: 50%;
             text-align: center;
         }
+        #rarity-selection {
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        #rarity-selection label {
+            font-size: 18px;
+            cursor: pointer;
+        }
+        #rarity-selection input {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -133,6 +146,22 @@
             <button class="button" onclick="drawGachapon(5)">5 Draws</button>
             <button class="button" onclick="drawGachapon(10)">10 Draws</button>
             <button class="button" onclick="resetSimulation()">Reset</button>
+        </div>
+
+        <!-- Cosmetic Radial Buttons -->
+        <div id="rarity-selection">
+            <label>
+                <input type="radio" name="rarity" value="common" checked>
+                ⚪ Common
+            </label>
+            <label>
+                <input type="radio" name="rarity" value="uncommon">
+                🟢 Uncommon
+            </label>
+            <label>
+                <input type="radio" name="rarity" value="rare">
+                🔵 Rare
+            </label>
         </div>
 
         <div id="results">
@@ -245,46 +274,37 @@
             // Append to the end of the output log
             drawHistory.forEach(item => {
                 let p = document.createElement('p');
-                p.textContent = item.replace('Tier ', '');
+                p.textContent = item.replace('Tier', '⭐');
                 outputDiv.appendChild(p);
             });
 
-            // Display the total numbers of each tier that was pulled
-            tiers.forEach(tier => {
-                let total = Object.keys(results).reduce((acc, item) => {
-                    if (item.includes(tier.name)) {
-                        acc += results[item];
-                    }
-                    return acc;
-                }, 0);
-                let li = document.createElement('li');
-                li.textContent = `${tier.name}: ${total}`;
-                totalsList.appendChild(li);
-            });
+            // Show the totals list of all items drawn
+            for (let item in results) {
+                if (results[item] > 0) {
+                    let li = document.createElement('li');
+                    li.textContent = `${item}: ${results[item]}`;
+                    totalsList.appendChild(li);
+                }
+            }
 
-            // Display the pity counter hits
+            // Update the pity counter display
             document.getElementById('pityCounterHits').textContent = `Pity Counter Hits: ${pityCounterHits}`;
-
-            // Display the until pity
             document.getElementById('untilPity').textContent = `Until Pity: ${untilPity}`;
         }
 
         function resetSimulation() {
-            // Reset all counters and results
             pityCounter = 0;
             pityCounterHits = 0;
-            untilPity = 10
+            untilPity = 10;
             results = {};
             drawHistory = [];
 
-            // Initialize the results object for each item
             items.forEach(item => {
                 tiers.forEach(tier => {
                     results[`${item} ${tier.name}`] = 0;
                 });
             });
 
-            // Update the UI with reset results
             updateResults();
         }
 
