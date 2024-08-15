@@ -15,13 +15,13 @@
             height: 100vh;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0; /* Default light mode background color */
-            color: #333; /* Default light mode text color */
-            transition: background-color 0.3s, color 0.3s;
-        }
-        body.dark-mode {
             background-color: #333; /* Dark mode background color */
             color: #f0f0f0; /* Dark mode text color */
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.light-mode {
+            background-color: #f0f0f0; /* Light mode background color */
+            color: #333; /* Light mode text color */
         }
         .switch {
             position: relative;
@@ -122,37 +122,25 @@
             flex-basis: 50%;
             text-align: center;
         }
-        #rarity-selection {
-            margin: 15px 0;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+        #coinCount {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
         }
-        #rarity-selection label {
-            font-size: 18px;
+        .radial-button {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin: 0 5px;
             cursor: pointer;
         }
-        #rarity-selection input {
-            margin-right: 5px;
-        }
-        #coin-container {
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        #coin-container input {
-            width: 100px;
-            padding: 5px;
-            font-size: 16px;
-            text-align: center;
-        }
-        #coin-container span {
-            font-size: 18px;
-        }
+        .common { background-color: #fff; }
+        .uncommon { background-color: #0f0; }
+        .rare { background-color: #00f; }
     </style>
 </head>
-<body>
+<body class="dark-mode"> <!-- Default to dark mode -->
     <h1>Gachapon Simulator</h1>
 
     <div id="container">
@@ -161,28 +149,6 @@
             <button class="button" onclick="drawGachapon(5)">5 Draws</button>
             <button class="button" onclick="drawGachapon(10)">10 Draws</button>
             <button class="button" onclick="resetSimulation()">Reset</button>
-        </div>
-
-        <!-- Cosmetic Radial Buttons -->
-        <div id="rarity-selection">
-            <label>
-                <input type="radio" name="rarity" value="common" checked>
-                ⚪ Common
-            </label>
-            <label>
-                <input type="radio" name="rarity" value="uncommon">
-                🟢 Uncommon
-            </label>
-            <label>
-                <input type="radio" name="rarity" value="rare">
-                🔵 Rare
-            </label>
-        </div>
-
-        <!-- Coin Input -->
-        <div id="coin-container">
-            <input type="number" id="coinInput" value="10000" min="0">
-            <span>Coins</span>
         </div>
 
         <div id="results">
@@ -195,14 +161,23 @@
             <div class="counter" id="untilPity">Until Pity: 10</div>
         </div>
 
+        <div id="coinCount">
+            Coins: <input type="number" id="coinInput" value="10000" min="0">
+        </div>
+
+        <div>
+            <div class="radial-button common" onclick="setRarity('common')"></div>
+            <div class="radial-button uncommon" onclick="setRarity('uncommon')"></div>
+            <div class="radial-button rare" onclick="setRarity('rare')"></div>
+        </div>
+
         <label class="switch">
-            <input type="checkbox" onclick="toggleDarkMode()">
+            <input type="checkbox" checked onclick="toggleDarkMode()">
             <span class="slider round"></span>
         </label>
     </div>
 
     <script>
-        // Define the items
         const items = [
             'Berserker\'s armor', 'BF Cannon', 'Big Club', 'Chumby Chicken', 'Cleansing Flames',
             'Curse of Exhaustion', 'Dark Ritual', 'Draining Dagger', 'Fiery Thorns', 'Fire Sword',
@@ -214,41 +189,39 @@
             'Knight\'s Lance', 'Plague Bringer', 'POGable Forge', 'Punching Bag', 'The BOX'
         ];
 
-        // Define the tiers with their base probabilities
         const tiers = [
-            { name: 'Tier 1', probability: 0.4 },
-            { name: 'Tier 2', probability: 0.5 },
-            { name: 'Tier 3', probability: 0.08 },
-            { name: 'Tier 4', probability: 0.02 }
+            { name: '1', probability: 0.4 },
+            { name: '2', probability: 0.5 },
+            { name: '3', probability: 0.08 },
+            { name: '4', probability: 0.02 }
         ];
 
         let pityCounter = 0;
         let pityCounterHits = 0;
         let untilPity = 10;
         let results = {
-            'Tier 1': 0,
-            'Tier 2': 0,
-            'Tier 3': 0,
-            'Tier 4': 0
+            '1': 0,
+            '2': 0,
+            '3': 0,
+            '4': 0
         };
-
-        // Array to store draw history
         let drawHistory = [];
+        let selectedRarity = 'common';
 
         function drawGachapon(numDraws) {
-            let selectedRarity = document.querySelector('input[name="rarity"]:checked').value;
-            let coinCost = getCoinCost(selectedRarity);
+            const coinsInput = document.getElementById('coinInput');
+            let coins = parseInt(coinsInput.value);
 
-            let coinInput = document.getElementById('coinInput');
-            let currentCoins = parseInt(coinInput.value);
+            const costPerDraw = getCoinCost(selectedRarity);
+            const totalCost = costPerDraw * numDraws;
 
-            if (currentCoins < coinCost * numDraws) {
-                alert("Not enough coins!");
+            if (coins < totalCost) {
+                alert('Not enough coins!');
                 return;
             }
 
-            currentCoins -= coinCost * numDraws;
-            coinInput.value = currentCoins;
+            coins -= totalCost;
+            coinsInput.value = coins;
 
             for (let i = 0; i < numDraws; i++) {
                 let random = Math.random();
@@ -257,34 +230,31 @@
                 pityCounter++;
                 untilPity--;
 
-                // Check for pity
                 if (pityCounter >= 10) {
                     pityCounter = 0;
                     pityCounterHits++;
-                    untilPity = 10; // Reset untilPity
+                    untilPity = 10;
                     if (Math.random() < 0.8) {
-                        pullItem('Tier 3');
+                        pullItem('3');
                     } else {
-                        pullItem('Tier 4');
+                        pullItem('4');
                     }
                     continue;
                 }
 
-                // Normal draw
                 for (let tier of tiers) {
                     cumulativeProbability += tier.probability;
                     if (random < cumulativeProbability) {
                         pullItem(tier.name);
-                        if (tier.name === 'Tier 3' || tier.name === 'Tier 4') {
-                            pityCounter = 0;  // Reset pity counter if Tier 3 or Tier 4 is drawn
-                            untilPity = 10; // Reset untilPity
+                        if (tier.name === '3' || tier.name === '4') {
+                            pityCounter = 0;
+                            untilPity = 10;
                         }
                         break;
                     }
                 }
             }
 
-            // Update the UI with results
             updateResults();
         }
 
@@ -302,61 +272,57 @@
         }
 
         function pullItem(tierName) {
-            // Randomly select one item from the list
             let selectedItem = items[Math.floor(Math.random() * items.length)];
             results[tierName]++;
-            drawHistory.push(`${selectedItem} (${tierName})`);
+            drawHistory.push(`${selectedItem} ${tierName}`);
         }
 
         function updateResults() {
-            // Display the cumulative results for pulled items
             let outputDiv = document.getElementById('output');
             let totalsList = document.getElementById('totals');
 
-            // Clear the output before appending new results
             outputDiv.innerHTML = '';
             totalsList.innerHTML = '';
 
-            // Append to the end of the output log
             drawHistory.forEach(item => {
                 let p = document.createElement('p');
-                p.textContent = item;
+                p.textContent = item.split(' ')[1]; // Output only the tier number
                 outputDiv.appendChild(p);
             });
 
-            // Display the total numbers of each tier that was pulled
             tiers.forEach(tier => {
                 let li = document.createElement('li');
-                li.textContent = `${tier.name}: ${results[tier.name]}`;
+                li.textContent = `Tier ${tier.name}: ${results[tier.name]}`;
                 totalsList.appendChild(li);
             });
 
-            // Display the pity counter hits
             document.getElementById('pityCounterHits').textContent = `Pity Counter Hits: ${pityCounterHits}`;
-
-            // Display the until pity
             document.getElementById('untilPity').textContent = `Until Pity: ${untilPity}`;
         }
 
+        function setRarity(rarity) {
+            selectedRarity = rarity;
+            document.querySelectorAll('.radial-button').forEach(btn => {
+                btn.style.border = btn.classList.contains(rarity) ? '2px solid #fff' : '2px solid transparent';
+            });
+        }
+
         function resetSimulation() {
-            // Reset all counters and results
             pityCounter = 0;
             pityCounterHits = 0;
             untilPity = 10;
             results = {
-                'Tier 1': 0,
-                'Tier 2': 0,
-                'Tier 3': 0,
-                'Tier 4': 0
+                '1': 0,
+                '2': 0,
+                '3': 0,
+                '4': 0
             };
             drawHistory = [];
-
-            // Update the UI with reset results
             updateResults();
         }
 
         function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode');
         }
     </script>
 </body>
