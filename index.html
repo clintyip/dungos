@@ -135,6 +135,21 @@
         #rarity-selection input {
             margin-right: 5px;
         }
+        #coin-container {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #coin-container input {
+            width: 100px;
+            padding: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
+        #coin-container span {
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -162,6 +177,12 @@
                 <input type="radio" name="rarity" value="rare">
                 🔵 Rare
             </label>
+        </div>
+
+        <!-- Coin Input -->
+        <div id="coin-container">
+            <input type="number" id="coinInput" value="10000" min="0">
+            <span>Coins</span>
         </div>
 
         <div id="results">
@@ -215,6 +236,20 @@
         let drawHistory = [];
 
         function drawGachapon(numDraws) {
+            let selectedRarity = document.querySelector('input[name="rarity"]:checked').value;
+            let coinCost = getCoinCost(selectedRarity);
+
+            let coinInput = document.getElementById('coinInput');
+            let currentCoins = parseInt(coinInput.value);
+
+            if (currentCoins < coinCost * numDraws) {
+                alert("Not enough coins!");
+                return;
+            }
+
+            currentCoins -= coinCost * numDraws;
+            coinInput.value = currentCoins;
+
             for (let i = 0; i < numDraws; i++) {
                 let random = Math.random();
                 let cumulativeProbability = 0;
@@ -251,6 +286,19 @@
 
             // Update the UI with results
             updateResults();
+        }
+
+        function getCoinCost(rarity) {
+            switch (rarity) {
+                case 'common':
+                    return 200;
+                case 'uncommon':
+                    return 600;
+                case 'rare':
+                    return 1200;
+                default:
+                    return 200;
+            }
         }
 
         function pullItem(tierName) {
