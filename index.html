@@ -204,14 +204,12 @@
         let pityCounter = 0;
         let pityCounterHits = 0;
         let untilPity = 10;
-        let results = {};
-
-        // Initialize the results object for each item
-        items.forEach(item => {
-            tiers.forEach(tier => {
-                results[`${item} ${tier.name}`] = 0;
-            });
-        });
+        let results = {
+            'Tier 1': 0,
+            'Tier 2': 0,
+            'Tier 3': 0,
+            'Tier 4': 0
+        };
 
         // Array to store draw history
         let drawHistory = [];
@@ -258,8 +256,8 @@
         function pullItem(tierName) {
             // Randomly select one item from the list
             let selectedItem = items[Math.floor(Math.random() * items.length)];
-            results[`${selectedItem} ${tierName}`]++;
-            drawHistory.push(`${selectedItem} ${tierName}`);
+            results[tierName]++;
+            drawHistory.push(`${selectedItem} (${tierName})`);
         }
 
         function updateResults() {
@@ -274,37 +272,38 @@
             // Append to the end of the output log
             drawHistory.forEach(item => {
                 let p = document.createElement('p');
-                p.textContent = item.replace('Tier', '⭐');
+                p.textContent = item;
                 outputDiv.appendChild(p);
             });
 
-            // Show the totals list of all items drawn
-            for (let item in results) {
-                if (results[item] > 0) {
-                    let li = document.createElement('li');
-                    li.textContent = `${item}: ${results[item]}`;
-                    totalsList.appendChild(li);
-                }
-            }
+            // Display the total numbers of each tier that was pulled
+            tiers.forEach(tier => {
+                let li = document.createElement('li');
+                li.textContent = `${tier.name}: ${results[tier.name]}`;
+                totalsList.appendChild(li);
+            });
 
-            // Update the pity counter display
+            // Display the pity counter hits
             document.getElementById('pityCounterHits').textContent = `Pity Counter Hits: ${pityCounterHits}`;
+
+            // Display the until pity
             document.getElementById('untilPity').textContent = `Until Pity: ${untilPity}`;
         }
 
         function resetSimulation() {
+            // Reset all counters and results
             pityCounter = 0;
             pityCounterHits = 0;
             untilPity = 10;
-            results = {};
+            results = {
+                'Tier 1': 0,
+                'Tier 2': 0,
+                'Tier 3': 0,
+                'Tier 4': 0
+            };
             drawHistory = [];
 
-            items.forEach(item => {
-                tiers.forEach(tier => {
-                    results[`${item} ${tier.name}`] = 0;
-                });
-            });
-
+            // Update the UI with reset results
             updateResults();
         }
 
