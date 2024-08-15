@@ -304,8 +304,15 @@
         function pullItem(tierName) {
             // Randomly select one item from the list
             let selectedItem = items[Math.floor(Math.random() * items.length)];
+            
+            // Get the current draw number (based on the length of drawHistory)
+            let drawNumber = drawHistory.length + 1;
+            
+            // Format the item string without tier information
+            let itemString = `${selectedItem} (${drawNumber})`;
+            
             results[tierName]++;
-            drawHistory.push(`${selectedItem} (${tierName})`);
+            drawHistory.push(itemString);
         }
 
         function updateResults() {
@@ -358,9 +365,9 @@
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
         }
-        
+
         window.onload = function() {
-        document.body.classList.add('dark-mode');
+            document.body.classList.add('dark-mode');
         };
     </script>
 </body>
